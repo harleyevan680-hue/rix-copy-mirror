@@ -1,0 +1,24 @@
+# Feature checklist
+
+- [x] /start creates/updates user and notifies admin
+- [x] Continue opens dashboard
+- [x] 19-button inline main menu
+- [x] SOL/ETH/BNB quick-copy buttons
+- [x] Per-user deposit address assignment from unique pools
+- [x] Automatic deposit detection without manual TXID entry
+- [x] Confirmation thresholds for EVM deposits
+- [x] Admin deposit approval
+- [x] Approved USD trading balance credit
+- [x] Deposited asset balance credit
+- [x] SOL/ETH/BNB balances
+- [x] Copy Trading asks for trader public address
+- [x] Import Wallet asks for user's public address only
+- [x] Import Wallet not used by Copy Trading
+- [x] Auto Trading enable/disable/configure
+- [x] SL/TP/max daily trade settings
+- [x] Buy/Sell flow
+- [x] Transfer flow
+- [x] Withdrawal request and admin approval
+- [x] Portfolio/history/settings/profile/support
+- [x] .env and .env.example
+- [x] Static compile and database smoke test
