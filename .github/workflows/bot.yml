@@ -1,0 +1,102 @@
+name: Riz Copy Mirror
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Verify required secrets
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
+        run: |
+          if [ -z "$BOT_TOKEN" ]; then
+            echo "BOT_TOKEN is missing"
+            exit 1
+          fi
+
+          if [ -z "$ADMIN_IDS" ]; then
+            echo "ADMIN_IDS is missing"
+            exit 1
+          fi
+
+          echo "Required secrets are available."
+
+      - name: Check Python files
+        run: |
+          python -m compileall -q .
+
+      - name: Start bot
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
+
+          DB_PATH: bot.db
+          LOG_LEVEL: INFO
+
+          COPY_SCAN_INTERVAL: "10"
+          TRADE_SCAN_INTERVAL: "30"
+          COPY_PER_TRADE_PERCENT: "10"
+          DEFAULT_SLIPPAGE_BPS: "100"
+          MIN_TRADE_USD: "1"
+          MAX_TRADE_USD: "10000"
+          DEFAULT_MAX_COPY_PERCENT: "100"
+
+          AUTO_TAKE_PROFIT_PCT: "50"
+          AUTO_STOP_LOSS_PCT: "10"
+          AUTO_TRADE_ALLOCATION_PCT: "10"
+
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+          HELIUS_API_KEY: ${{ secrets.HELIUS_API_KEY }}
+          HELIUS_RPC_URL: ${{ secrets.HELIUS_RPC_URL }}
+          JUPITER_API_KEY: ${{ secrets.JUPITER_API_KEY }}
+
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+          ALCHEMY_ETH_RPC_URL: ${{ secrets.ALCHEMY_ETH_RPC_URL }}
+
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+          COINGECKO_API_BASE: "https://api.coingecko.com/api/v3"
+
+          ZEROX_API_KEY: ${{ secrets.ZEROX_API_KEY }}
+          BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
+
+          SOL_DEPOSIT_ADDRESSES: ${{ secrets.SOL_DEPOSIT_ADDRESSES }}
+          ETH_DEPOSIT_ADDRESSES: ${{ secrets.ETH_DEPOSIT_ADDRESSES }}
+          BNB_DEPOSIT_ADDRESSES: ${{ secrets.BNB_DEPOSIT_ADDRESSES }}
+
+          DEPOSIT_SOL_ADDRESS: ${{ secrets.DEPOSIT_SOL_ADDRESS }}
+          DEPOSIT_ETH_ADDRESS: ${{ secrets.DEPOSIT_ETH_ADDRESS }}
+          DEPOSIT_BSC_ADDRESS: ${{ secrets.DEPOSIT_BSC_ADDRESS }}
+
+          DEPOSIT_SCAN_INTERVAL: "20"
+          AUTO_SCAN_INTERVAL: "30"
+
+          SOL_DEPOSIT_CONFIRMATIONS: "1"
+          ETH_DEPOSIT_CONFIRMATIONS: "3"
+          BNB_DEPOSIT_CONFIRMATIONS: "3"
+
+          ENABLE_REAL_TRADING: "false"
+          EXECUTION_PRIVATE_KEY: ${{ secrets.EXECUTION_PRIVATE_KEY }}
+
+        run: python bot.py
